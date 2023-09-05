@@ -13,11 +13,14 @@ $(document).ready(function () {
     {
       data: "title",
       title: "Title",
+      type: "text",
+      required: true,
     },
     {
       data: "body",
       title: "Body",
       type: "text",
+      required: true,
     },
   ];
   async function createDataTable() {
@@ -32,8 +35,16 @@ $(document).ready(function () {
       dom: "Bfrtip", // Needs button container
       select: "single",
       responsive: true,
-      altEditor: true, // Enable altEditor
+      // altEditor: true, // Enable altEditor
       buttons: [
+        {
+          text: "Open Form",
+          name: "Add",
+          action: function () {
+            document.querySelector(`form`).innerHTML = "";
+            parametersToJSON(columnDefs);
+          },
+        },
         {
           text: "Add",
           name: "add", // do not change name
@@ -60,7 +71,7 @@ $(document).ready(function () {
           type: "POST",
           data: trueData,
           success: function () {
-            location.reload();
+            // location.reload();
           },
           error: error,
         });
@@ -100,4 +111,5 @@ $(document).ready(function () {
     });
   }
   createDataTable();
+  // parametersToJSON(columnDefs);
 });

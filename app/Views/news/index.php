@@ -26,10 +26,13 @@
 
 <form></form>
 
-
-<?php echo $columnsMeta; ?>
+<script>
+        var newsData = <?php echo $newsData; ?>;
+        console.log(newsData);
+</script>
 
 <?php
+  echo "<script>let categoryData = '$categoryData';</script>";
   echo "<script>let columnDefsPassed = '$columnsMeta';</script>";
 ?>
 

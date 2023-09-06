@@ -2,13 +2,23 @@ $(document).ready(function () {
   const csrfToken = document
     .querySelector('meta[name="csrf-token"]')
     .getAttribute("content");
-  console.log(csrfToken);
 
-  // let columnDefs2;
+  const categoryMapping = {};
+  JSON.parse(categoryData).forEach((category) => {
+    categoryMapping[category.id] = category.news_category;
+  });
+
+  newsData.forEach((article) => {
+    if (categoryMapping.hasOwnProperty(article.category_id)) {
+      article.category_id = categoryMapping[article.category_id];
+    }
+  });
+
   let jsonMeta = columnDefsPassed
     .replaceAll("meta_column_name", "data")
     .replaceAll("meta_title", "title")
     .replaceAll("meta_type", "type")
+    .replaceAll(`"data":"category"`, `"data":"category_id"`)
     .replaceAll("meta_required", "required");
 
   let columnDefs = JSON.parse(jsonMeta);
@@ -32,6 +42,12 @@ $(document).ready(function () {
   //     type: "text",
   //     required: true,
   //   },
+  //   {
+  //     data: "category_id",
+  //     title: "category",
+  //     type: "options",
+  //     required: true,
+  //   },
   // ];
 
   console.log(columnDefs);
@@ -39,11 +55,7 @@ $(document).ready(function () {
   async function createDataTable() {
     $("#example").DataTable({
       sPaginationType: "full_numbers",
-      ajax: {
-        url: `/news/getData`,
-        // our data is an array of objects, in the root node instead of /data node, so we need 'dataSrc' parameter
-        dataSrc: "",
-      },
+      data: newsData,
       columns: columnDefs,
       dom: "Bfrtip", // Needs button container
       select: "single",
@@ -79,6 +91,7 @@ $(document).ready(function () {
           csrf_test_name: csrfToken,
           rowdata: rowdata,
         };
+        console.log(trueData);
         $.ajax({
           url: `/news/createNews`,
           type: "POST",

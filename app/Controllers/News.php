@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\NewsModel;
 use App\Models\ColumnsModel;
+use App\Models\CategoryModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class News extends BaseController
@@ -16,6 +17,8 @@ class News extends BaseController
             'news'  => $model->getNews(),
             'title' => 'News archive',
             'columnsMeta' => $this->getMetaColumns("news"),
+            'categoryData' => $this->getCategories(),
+            'newsData' => json_encode($model->getNews()),
         ];
 
         return view('templates/header', $data)
@@ -71,6 +74,7 @@ class News extends BaseController
             'title' => $post['title'],
             'slug'  => url_title($post['title'], '-', true),
             'body'  => $post['body'],
+            'category_id'  => $post['category_id'],
         ]);
 
         return view('templates/header', ['title' => 'Create a news item'])
@@ -82,11 +86,12 @@ class News extends BaseController
     {
         //gets the model
         $model = model(NewsModel::class);
+
         //gets the data from the database
         $data = $model->getNews();
 
         //returns the data in json
-        return $this->response->setJSON($data);
+        return json_encode($data);
     }
     
     public function createNews()
@@ -99,6 +104,7 @@ class News extends BaseController
             'title' => $data['title'],
             'slug'  => url_title($data['title'], '-', true),
             'body'  => $data['body'],
+            'category_id' => $data['category_id'],
         ]);
     }
 
@@ -135,7 +141,18 @@ class News extends BaseController
         foreach($data as &$e){
             unset($e['id']);
             unset($e['meta_table_name']);
+            unset($e['reference_table_name']);
+            unset($e['reference_column_name']);
+            unset($e['reference_value']);
         }
+
+        return json_encode($data);
+    }
+
+    public function getCategories() {
+        $model = model(CategoryModel::class);
+
+        $data = $model->getCategory();
 
         return json_encode($data);
     }

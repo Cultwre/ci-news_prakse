@@ -14,6 +14,7 @@ const parametersToJSON = function (parameters) {
         rowdata: {
           title: values.Title,
           body: values.Body,
+          category_id: values.category,
         },
       };
       console.log(trueData);
@@ -36,6 +37,19 @@ const parametersToJSON = function (parameters) {
     layout.schema[e.title]["type"] = e.type == "readonly" ? "integer" : e.type;
     layout.schema[e.title]["required"] = e.required == true ? true : false;
     layout.schema[e.title]["readonly"] = e.type == "readonly" ? true : false;
+    if (layout.schema[e.title]["type"] === "options") {
+      layout.schema[e.title]["enum"] = [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+      ];
+    }
   });
 
   console.log(layout);

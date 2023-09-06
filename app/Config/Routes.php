@@ -12,6 +12,7 @@ use App\Controllers\Pages;
 
 $routes->get('news', [News::class, 'index']);
 $routes->get('news/getData', [News::class, 'getData']);
+$routes->get('news/getCategories', [News::class, 'getCategories']);
 $routes->post('news/createNews', [News::class, 'createNews']);
 $routes->get('news/new', [News::class, 'new']); 
 $routes->post('news', [News::class, 'create']); 

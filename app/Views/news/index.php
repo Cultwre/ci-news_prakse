@@ -26,6 +26,14 @@
 
 <form></form>
 
+
+<?php echo $columnsMeta; ?>
+
+<?php
+  echo "<script>let columnDefsPassed = '$columnsMeta';</script>";
+?>
+
+
 <?php else: ?>
 
     <h3>No News</h3>

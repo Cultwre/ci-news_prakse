@@ -34,7 +34,7 @@ const parametersToJSON = function (parameters) {
     layout.schema[e.title] = {};
     layout.schema[e.title]["title"] = e.data;
     layout.schema[e.title]["type"] = e.type == "readonly" ? "integer" : e.type;
-    layout.schema[e.title]["required"] = e.required ? true : false;
+    layout.schema[e.title]["required"] = e.required == true ? true : false;
     layout.schema[e.title]["readonly"] = e.type == "readonly" ? true : false;
   });
 

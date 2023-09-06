@@ -4,25 +4,38 @@ $(document).ready(function () {
     .getAttribute("content");
   console.log(csrfToken);
 
-  var columnDefs = [
-    {
-      data: "id",
-      title: "Id",
-      type: "readonly",
-    },
-    {
-      data: "title",
-      title: "Title",
-      type: "text",
-      required: true,
-    },
-    {
-      data: "body",
-      title: "Body",
-      type: "text",
-      required: true,
-    },
-  ];
+  // let columnDefs2;
+  let jsonMeta = columnDefsPassed
+    .replaceAll("meta_column_name", "data")
+    .replaceAll("meta_title", "title")
+    .replaceAll("meta_type", "type")
+    .replaceAll("meta_required", "required");
+
+  let columnDefs = JSON.parse(jsonMeta);
+
+  // var columnDefs = [
+  //   {
+  //     data: "id",
+  //     title: "Id",
+  //     type: "readonly",
+  //     required: false,
+  //   },
+  //   {
+  //     data: "title",
+  //     title: "Title",
+  //     type: "text",
+  //     required: true,
+  //   },
+  //   {
+  //     data: "body",
+  //     title: "Body",
+  //     type: "text",
+  //     required: true,
+  //   },
+  // ];
+
+  console.log(columnDefs);
+
   async function createDataTable() {
     $("#example").DataTable({
       sPaginationType: "full_numbers",

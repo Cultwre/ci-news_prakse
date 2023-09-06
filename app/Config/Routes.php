@@ -18,6 +18,7 @@ $routes->post('news', [News::class, 'create']);
 $routes->get('news/(:segment)', [News::class, 'show']);
 $routes->post('news/editNews', [News::class, 'editNews']);
 $routes->post('news/deleteNews', [News::class, 'deleteNews']);
+$routes->get('news', [News::class, 'getMetaColumns']);
 
 $routes->get('pages', [Pages::class, 'index']);
 $routes->get('(:segment)', [Pages::class, 'view']);

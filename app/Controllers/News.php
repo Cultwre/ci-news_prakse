@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\NewsModel;
+use App\Models\ColumnsModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class News extends BaseController
@@ -14,6 +15,7 @@ class News extends BaseController
         $data = [
             'news'  => $model->getNews(),
             'title' => 'News archive',
+            'columnsMeta' => $this->getMetaColumns("news"),
         ];
 
         return view('templates/header', $data)
@@ -122,5 +124,19 @@ class News extends BaseController
         $model = model(NewsModel::class);
 
         $model->delete($data['id']);
+    }
+
+    public function getMetaColumns($metaTableName){
+
+        $model = model(ColumnsModel::class);
+
+        $data = $model->getMeta($metaTableName);
+
+        foreach($data as &$e){
+            unset($e['id']);
+            unset($e['meta_table_name']);
+        }
+
+        return json_encode($data);
     }
 }

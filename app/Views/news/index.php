@@ -19,7 +19,6 @@
     
 
     <div class="container">
-    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Form</button>
   
   <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example">
 

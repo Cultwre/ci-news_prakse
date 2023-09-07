@@ -80,12 +80,34 @@ $(document).ready(function () {
         // },
         {
           text: "Add",
-          name: "add", // do not change name
+          name: "Add", // do not change name
+          action: function () {
+            document.querySelector("form").innerHTML = "";
+            $("#myModal").modal("show");
+            parametersToJSON(columnDefs);
+          },
         },
         {
           extend: "selected", // Bind to Selected row
           text: "Edit",
-          name: "edit", // do not change name
+          name: "Edit", // do not change name
+          action: function () {
+            document.querySelector("form").innerHTML = "";
+
+            let data = document
+              .querySelector(".selected")
+              .getElementsByTagName("td");
+
+            let arr = [];
+
+            for (let i = 0; data.length > i; i++) {
+              arr.push(data[i].textContent);
+            }
+
+            // let columns = document.querySelector("thead").textContent;
+            $("#myModal").modal("show");
+            parametersToJSON(columnDefs, arr);
+          },
         },
         {
           extend: "selected", // Bind to Selected row
@@ -93,23 +115,23 @@ $(document).ready(function () {
           name: "delete", // do not change name
         },
       ],
-      onAddRow: function (datatable, rowdata, success, error) {
-        console.log(rowdata);
-        let trueData = {
-          csrf_test_name: csrfToken,
-          rowdata: rowdata,
-        };
-        console.log(trueData);
-        $.ajax({
-          url: `/news/createNews`,
-          type: "POST",
-          data: trueData,
-          success: function () {
-            location.reload();
-          },
-          error: error,
-        });
-      },
+      // onAddRow: function (datatable, rowdata, success, error) {
+      //   console.log(rowdata);
+      //   let trueData = {
+      //     csrf_test_name: csrfToken,
+      //     rowdata: rowdata,
+      //   };
+      //   console.log(trueData);
+      //   $.ajax({
+      //     url: `/news/createNews`,
+      //     type: "POST",
+      //     data: trueData,
+      //     success: function () {
+      //       location.reload();
+      //     },
+      //     error: error,
+      //   });
+      // },
       onDeleteRow: function (datatable, rowdata, success, error) {
         let trueData = {
           csrf_test_name: csrfToken,
@@ -126,24 +148,24 @@ $(document).ready(function () {
           error: error,
         });
       },
-      onEditRow: function (datatable, rowdata, success, error) {
-        let trueData = {
-          csrf_test_name: csrfToken,
-          rowdata: rowdata,
-        };
-        console.log(trueData);
-        $.ajax({
-          url: `/news/editNews`,
-          type: "POST",
-          data: trueData,
-          success: function () {
-            location.reload();
-          },
-          error: error,
-        });
-      },
+      // onEditRow: function (datatable, rowdata, success, error) {
+      //   let trueData = {
+      //     csrf_test_name: csrfToken,
+      //     rowdata: rowdata,
+      //   };
+      //   console.log(trueData);
+      //   $.ajax({
+      //     url: `/news/editNews`,
+      //     type: "POST",
+      //     data: trueData,
+      //     success: function () {
+      //       // location.reload();
+      //     },
+      //     error: error,
+      //   });
+      // },
     });
   }
   createDataTable();
-  parametersToJSON(columnDefs);
+  // parametersToJSON(columnDefs);
 });

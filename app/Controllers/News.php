@@ -118,6 +118,7 @@ class News extends BaseController
             'title' => $data['title'],
             'slug'  => url_title($data['title'], '-', true),
             'body'  => $data['body'],
+            'category_id'  => $data['category_id'],
         ];
 
         $model->update($data['id'], $updatedData);

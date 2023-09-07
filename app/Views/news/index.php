@@ -16,7 +16,10 @@
 
     <?php endforeach ?> -->
 
+    
+
     <div class="container">
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Open Form</button>
   
   <table cellpadding="0" cellspacing="0" border="0" class="dataTable table table-striped" id="example">
 
@@ -24,11 +27,30 @@
 
 </div>
 
-<form></form>
+
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+    <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">JSON Form</h4>
+        </div>
+        <div class="modal-body">
+        <form></form>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+</div>
 
 <script>
         var newsData = <?php echo $newsData; ?>;
-        console.log(newsData);
 </script>
 
 <?php

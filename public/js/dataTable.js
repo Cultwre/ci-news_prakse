@@ -3,6 +3,10 @@ $(document).ready(function () {
     .querySelector('meta[name="csrf-token"]')
     .getAttribute("content");
 
+  let titleObj = {};
+  let categoryParsed = JSON.parse(categoryData);
+  categoryParsed.forEach((e) => (titleObj[e.id] = e.news_category));
+
   const categoryMapping = {};
   JSON.parse(categoryData).forEach((category) => {
     categoryMapping[category.id] = category.news_category;
@@ -22,6 +26,12 @@ $(document).ready(function () {
     .replaceAll("meta_required", "required");
 
   let columnDefs = JSON.parse(jsonMeta);
+
+  columnDefs.forEach((e) => {
+    if (e.type === "select") {
+      e["options"] = titleObj;
+    }
+  });
 
   // var columnDefs = [
   //   {
@@ -50,8 +60,6 @@ $(document).ready(function () {
   //   },
   // ];
 
-  console.log(columnDefs);
-
   async function createDataTable() {
     $("#example").DataTable({
       sPaginationType: "full_numbers",
@@ -60,16 +68,16 @@ $(document).ready(function () {
       dom: "Bfrtip", // Needs button container
       select: "single",
       responsive: true,
-      // altEditor: true, // Enable altEditor
+      altEditor: true, // Enable altEditor
       buttons: [
-        {
-          text: "Open Form",
-          name: "Add",
-          action: function () {
-            document.querySelector(`form`).innerHTML = "";
-            parametersToJSON(columnDefs);
-          },
-        },
+        // {
+        //   text: "Open Form",
+        //   name: "Add",
+        //   action: function () {
+        //     document.querySelector(`form`).innerHTML = "";
+        //     // parametersToJSON(columnDefs);
+        //   },
+        // },
         {
           text: "Add",
           name: "add", // do not change name
@@ -97,7 +105,7 @@ $(document).ready(function () {
           type: "POST",
           data: trueData,
           success: function () {
-            // location.reload();
+            location.reload();
           },
           error: error,
         });
@@ -137,5 +145,5 @@ $(document).ready(function () {
     });
   }
   createDataTable();
-  // parametersToJSON(columnDefs);
+  parametersToJSON(columnDefs);
 });

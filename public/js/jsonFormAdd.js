@@ -2,12 +2,21 @@ const parametersToJSON = function (parameters) {
   const csrfToken = document
     .querySelector('meta[name="csrf-token"]')
     .getAttribute("content");
-  console.log(csrfToken);
+
+  let categoryParsed = JSON.parse(categoryData);
+  let enumArr = [];
+  let titleObj = {};
+
+  categoryParsed.forEach((e) => enumArr.push(e.id));
+
+  categoryParsed.forEach((e) => (titleObj[e.id] = e.news_category));
+
+  // console.log(titleObj);
 
   let layout = {
     schema: {},
 
-    value: {},
+    form: [],
     onSubmit: function (error, values) {
       let trueData = {
         csrf_test_name: csrfToken,
@@ -35,23 +44,32 @@ const parametersToJSON = function (parameters) {
     layout.schema[e.title] = {};
     layout.schema[e.title]["title"] = e.data;
     layout.schema[e.title]["type"] = e.type == "readonly" ? "integer" : e.type;
-    layout.schema[e.title]["required"] = e.required == true ? true : false;
+    layout.schema[e.title]["required"] = e.required == "true" ? true : false;
     layout.schema[e.title]["readonly"] = e.type == "readonly" ? true : false;
-    if (layout.schema[e.title]["type"] === "options") {
-      layout.schema[e.title]["enum"] = [
-        "1",
-        "2",
-        "3",
-        "4",
-        "5",
-        "6",
-        "7",
-        "8",
-        "9",
-      ];
+
+    if (layout.schema[e.title]["type"] === "select") {
+      layout.schema[e.title]["enum"] = enumArr;
+
+      let obj = {
+        key: e.title,
+        titleMap: titleObj,
+      };
+
+      layout.form.push(obj);
+    } else {
+      let obj = {
+        key: e.title,
+      };
+
+      layout.form.push(obj);
     }
   });
 
-  console.log(layout);
+  layout.form.push({
+    type: "submit",
+    title: "Submit",
+  });
+
+  // console.log(layout);
   $(`form`).jsonForm(layout);
 };

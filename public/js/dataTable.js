@@ -16,6 +16,7 @@ $(document).ready(function () {
   newsData.forEach((article) => {
     if (categoryMapping.hasOwnProperty(article.category_id)) {
       article.category_id = categoryMapping[article.category_id];
+      article.subcategory_id = categoryMapping[article.subcategory_id];
     }
   });
 
@@ -24,6 +25,7 @@ $(document).ready(function () {
     .replaceAll("meta_title", "title")
     .replaceAll("meta_type", "type")
     .replaceAll(`"data":"category"`, `"data":"category_id"`)
+    .replaceAll(`"data":"subcategory"`, `"data":"subcategory_id"`)
     .replaceAll("meta_required", "required");
 
   let columnDefs = JSON.parse(jsonMeta);
@@ -78,7 +80,7 @@ $(document).ready(function () {
     // disabled: true,
   };
 
-  console.log(columnDefs.push(actionButtons));
+  columnDefs.push(actionButtons);
 
   // var columnDefs = [
   //   {
@@ -231,8 +233,6 @@ $(document).ready(function () {
           deletingRequest(checked, (arr = true));
         });
       });
-
-      console.log(checked);
     });
 
     $(document).on("click", "[id^='example'] #edit-row", "tr", function (x) {
@@ -261,7 +261,6 @@ $(document).ready(function () {
         } else {
           document.getElementById("delete-button").disabled = true;
         }
-        console.log(state);
       }
     );
 
@@ -276,21 +275,15 @@ $(document).ready(function () {
       submitBtn.addEventListener("click", function () {
         deletingRequest(deleteParent);
       });
-
-      console.log(deleteParent);
     });
 
     $(document).on("click", "[id^='example'] #view-row", "tr", function (x) {
       const viewParent =
         x.currentTarget.parentElement.parentElement.getElementsByTagName("td");
 
-      console.log(viewParent);
-
       viewColumn.forEach((e) => {
         e.type = "readonly";
       });
-
-      console.log(viewColumn);
 
       viewRow(viewParent, viewColumn);
     });

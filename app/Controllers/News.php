@@ -75,6 +75,7 @@ class News extends BaseController
             'slug'  => url_title($post['title'], '-', true),
             'body'  => $post['body'],
             'category_id'  => $post['category_id'],
+            'subcategory_id' => $data['subcategory_id'],
         ]);
 
         return view('templates/header', ['title' => 'Create a news item'])
@@ -105,6 +106,7 @@ class News extends BaseController
             'slug'  => url_title($data['title'], '-', true),
             'body'  => $data['body'],
             'category_id' => $data['category_id'],
+            'subcategory_id' => $data['subcategory_id'],
         ]);
     }
 
@@ -119,6 +121,7 @@ class News extends BaseController
             'slug'  => url_title($data['title'], '-', true),
             'body'  => $data['body'],
             'category_id'  => $data['category_id'],
+            'subcategory_id' => $data['subcategory_id'],
         ];
 
         $model->update($data['id'], $updatedData);

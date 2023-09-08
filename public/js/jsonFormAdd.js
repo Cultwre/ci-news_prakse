@@ -9,11 +9,27 @@ const parametersToJSON = function (
 ) {
   let categoryParsed = JSON.parse(categoryData);
   let enumArr = [];
+  let subEnumArr = [];
   let titleObj = {};
+  let subTitleObj = {};
 
-  categoryParsed.forEach((e) => enumArr.push(e.id));
+  categoryParsed.forEach((e) => {
+    if (e.parent_id == null) {
+      enumArr.push(e.id);
+    } else {
+      subEnumArr.push(e.id);
+    }
+  });
 
-  categoryParsed.forEach((e) => (titleObj[e.id] = e.news_category));
+  categoryParsed.forEach((e) => {
+    titleObj[e.id] = e.news_category;
+
+    if (e.parent_id == null) {
+      titleObj[e.id] = e.news_category;
+    } else {
+      subTitleObj[e.id] = e.news_category;
+    }
+  });
 
   let layout = {
     schema: {},
@@ -30,12 +46,14 @@ const parametersToJSON = function (
           title: values.Title,
           body: values.Body,
           category_id: values.category,
+          subcategory_id: values.subcategory,
         };
       } else {
         dataForAJAX = {
           title: values.Title,
           body: values.Body,
           category_id: values.category,
+          subcategory_id: values.subcategory,
         };
       }
 
@@ -74,12 +92,43 @@ const parametersToJSON = function (
     layout.schema[e.title]["required"] = e.required == "true" ? true : false;
     layout.schema[e.title]["readonly"] = e.type == "readonly" ? true : false;
 
-    if (layout.schema[e.title]["type"] === "select") {
+    if (layout.schema[e.title]["type"] === "select" && e.title == "category") {
       layout.schema[e.title]["enum"] = enumArr;
 
       let obj = {
         key: e.title,
         titleMap: titleObj,
+        onInsert: function (evt) {
+          document.getElementsByName("category")[0].value = "";
+        },
+        onChange: function (evt) {
+          const subDropdown = document.getElementsByName("subcategory")[0];
+
+          var value = $(evt.target).val();
+
+          while (subDropdown.options.length > 0) {
+            subDropdown.remove(0);
+          }
+
+          categoryParsed.forEach((e) => {
+            if (e.parent_id == value) {
+              let newOption = new Option(e.news_category, e.id);
+              subDropdown.add(newOption, undefined);
+            }
+          });
+        },
+      };
+
+      layout.form.push(obj);
+    } else if (
+      layout.schema[e.title]["type"] === "select" &&
+      e.title == "subcategory"
+    ) {
+      // layout.schema[e.title]["enum"] = subEnumArr;
+
+      let obj = {
+        key: e.title,
+        titleMap: subTitleObj,
       };
 
       layout.form.push(obj);
@@ -93,7 +142,6 @@ const parametersToJSON = function (
 
     if (valuePassed !== null) {
       layout.value[e.title] = valuePassed[i];
-      console.log(valuePassed[i]);
     }
   });
 
@@ -104,7 +152,6 @@ const parametersToJSON = function (
     });
   }
 
-  // console.log(layout);
   $(`form`).jsonForm(layout);
 };
 

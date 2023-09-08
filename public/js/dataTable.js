@@ -3,6 +3,7 @@ $(document).ready(function () {
     .querySelector('meta[name="csrf-token"]')
     .getAttribute("content");
 
+  let state = [];
   let titleObj = {};
   let categoryParsed = JSON.parse(categoryData);
   categoryParsed.forEach((e) => (titleObj[e.id] = e.news_category));
@@ -32,6 +33,52 @@ $(document).ready(function () {
       e["options"] = titleObj;
     }
   });
+
+  let viewColumn = JSON.parse(JSON.stringify(columnDefs));
+
+  function editRow(target) {
+    document.querySelector("form").innerHTML = "";
+
+    let arr = [];
+
+    for (let i = 0; target.length > i; i++) {
+      arr.push(target[i].textContent);
+    }
+
+    $("#myModal").modal("show");
+    parametersToJSON(columnDefs, arr);
+  }
+
+  function viewRow(target, columnParameters) {
+    document.querySelector("form").innerHTML = "";
+
+    let arr = [];
+
+    for (let i = 0; target.length > i; i++) {
+      arr.push(target[i].textContent);
+    }
+
+    $("#myModal").modal("show");
+    parametersToJSON(columnParameters, arr, (view = true));
+  }
+
+  // function viewRow(target) {}
+
+  let actionButtons = {
+    data: null,
+    title: "Actions",
+    name: "Actions",
+    render: function (data, type, row, meta) {
+      // return `<button id=edit-row >Edit</button> <button id=delete-row data-target="#deleteModal" data-toggle="modal">Delete</button> <button id=view-row>View</button>`;
+      return `<button id="edit-row" class="btn btn-success btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Edit"><i class="fa fa-edit"></i></button>
+      <button id="delete-row" data-target="#deleteModal" data-toggle="modal" class="btn btn-danger btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+      <button id="view-row" class="btn btn-primary btn-sm rounded-0" type="button" data-toggle="tooltip" data-placement="top" title="View"><i class="fa-solid fa-expand"></i></button>
+      <input id="checkboxDelete" class="form-check-input" type="checkbox" id="checkboxNoLabel" value="" aria-label="...">`;
+    },
+    // disabled: true,
+  };
+
+  console.log(columnDefs.push(actionButtons));
 
   // var columnDefs = [
   //   {
@@ -66,9 +113,9 @@ $(document).ready(function () {
       data: newsData,
       columns: columnDefs,
       dom: "Bfrtip", // Needs button container
-      select: "single",
+      // select: "single",
       responsive: true,
-      altEditor: true, // Enable altEditor
+      altEditor: false, // Enable altEditor
       buttons: [
         // {
         //   text: "Open Form",
@@ -78,42 +125,38 @@ $(document).ready(function () {
         //     // parametersToJSON(columnDefs);
         //   },
         // },
-        {
-          text: "Add",
-          name: "Add", // do not change name
-          action: function () {
-            document.querySelector("form").innerHTML = "";
-            $("#myModal").modal("show");
-            parametersToJSON(columnDefs);
-          },
-        },
-        {
-          extend: "selected", // Bind to Selected row
-          text: "Edit",
-          name: "Edit", // do not change name
-          action: function () {
-            document.querySelector("form").innerHTML = "";
-
-            let data = document
-              .querySelector(".selected")
-              .getElementsByTagName("td");
-
-            let arr = [];
-
-            for (let i = 0; data.length > i; i++) {
-              arr.push(data[i].textContent);
-            }
-
-            // let columns = document.querySelector("thead").textContent;
-            $("#myModal").modal("show");
-            parametersToJSON(columnDefs, arr);
-          },
-        },
-        {
-          extend: "selected", // Bind to Selected row
-          text: "Delete",
-          name: "delete", // do not change name
-        },
+        // {
+        //   text: "Add",
+        //   name: "Add", // do not change name
+        //   action: function () {
+        //     document.querySelector("form").innerHTML = "";
+        //     $("#myModal").modal("show");
+        //     parametersToJSON(columnDefs);
+        //   },
+        // },
+        // {
+        //   extend: "selected", // Bind to Selected row
+        //   text: "Edit",
+        //   name: "Edit", // do not change name
+        //   action: function () {
+        //     document.querySelector("form").innerHTML = "";
+        //     let data = document
+        //       .querySelector(".selected")
+        //       .getElementsByTagName("td");
+        //     let arr = [];
+        //     for (let i = 0; data.length > i; i++) {
+        //       arr.push(data[i].textContent);
+        //     }
+        //     // let columns = document.querySelector("thead").textContent;
+        //     $("#myModal").modal("show");
+        //     parametersToJSON(columnDefs, arr);
+        //   },
+        // },
+        // {
+        //   extend: "selected", // Bind to Selected row
+        //   text: "Delete",
+        //   name: "delete", // do not change name
+        // },
       ],
       // onAddRow: function (datatable, rowdata, success, error) {
       //   console.log(rowdata);
@@ -132,22 +175,22 @@ $(document).ready(function () {
       //     error: error,
       //   });
       // },
-      onDeleteRow: function (datatable, rowdata, success, error) {
-        let trueData = {
-          csrf_test_name: csrfToken,
-          rowdata: rowdata[0],
-        };
-        console.log(trueData);
-        $.ajax({
-          url: `/news/deleteNews`,
-          type: "POST",
-          data: trueData,
-          success: function () {
-            location.reload();
-          },
-          error: error,
-        });
-      },
+      // onDeleteRow: function (datatable, rowdata, success, error) {
+      //   let trueData = {
+      //     csrf_test_name: csrfToken,
+      //     rowdata: rowdata[0],
+      //   };
+      //   console.log(trueData);
+      //   $.ajax({
+      //     url: `/news/deleteNews`,
+      //     type: "POST",
+      //     data: trueData,
+      //     success: function () {
+      //       location.reload();
+      //     },
+      //     error: error,
+      //   });
+      // },
       // onEditRow: function (datatable, rowdata, success, error) {
       //   let trueData = {
       //     csrf_test_name: csrfToken,
@@ -165,7 +208,109 @@ $(document).ready(function () {
       //   });
       // },
     });
+
+    $("#addbutton").on("click", function () {
+      document.querySelector("form").innerHTML = "";
+      $("#myModal").modal("show");
+      parametersToJSON(columnDefs);
+    });
+
+    $("#delete-button").on("click", function () {
+      const checkboxes = document.querySelectorAll("#checkboxDelete");
+      let checked = [];
+
+      checkboxes.forEach((e) => {
+        if (e.checked) {
+          let id = e.parentElement.parentElement.children[0].textContent;
+          checked.push(id);
+        }
+
+        const submitBtn = document.querySelector(`#submit-modal`);
+
+        submitBtn.addEventListener("click", function () {
+          deletingRequest(checked, (arr = true));
+        });
+      });
+
+      console.log(checked);
+    });
+
+    $(document).on("click", "[id^='example'] #edit-row", "tr", function (x) {
+      const editParent =
+        x.currentTarget.parentElement.parentElement.getElementsByTagName("td");
+
+      editRow(editParent);
+    });
+
+    $(document).on(
+      "click",
+      "[id^='example'] #checkboxDelete",
+      "tr",
+      function (x) {
+        const checkbox = x.currentTarget;
+        const checkboxes = document.querySelectorAll("#checkboxDelete");
+
+        if (checkbox.checked) {
+          state.push(".");
+        } else {
+          state.splice(-1);
+        }
+
+        if (state.length >= 2) {
+          document.getElementById("delete-button").disabled = false;
+        } else {
+          document.getElementById("delete-button").disabled = true;
+        }
+        console.log(state);
+      }
+    );
+
+    $(document).on("click", "[id^='example'] #delete-row", "tr", function (x) {
+      const deleteParent =
+        x.currentTarget.parentElement.parentElement.getElementsByTagName(
+          "td"
+        )[0].textContent;
+
+      const submitBtn = document.querySelector(`#submit-modal`);
+
+      submitBtn.addEventListener("click", function () {
+        deletingRequest(deleteParent);
+      });
+
+      console.log(deleteParent);
+    });
+
+    $(document).on("click", "[id^='example'] #view-row", "tr", function (x) {
+      const viewParent =
+        x.currentTarget.parentElement.parentElement.getElementsByTagName("td");
+
+      console.log(viewParent);
+
+      viewColumn.forEach((e) => {
+        e.type = "readonly";
+      });
+
+      console.log(viewColumn);
+
+      viewRow(viewParent, viewColumn);
+    });
+
+    // $(document).on("click", "[id^='example'] #delete-row", "tr", function (x) {
+    //   const deleteParent =
+    //     x.currentTarget.parentElement.parentElement.getElementsByTagName(
+    //       "td"
+    //     )[0].textContent;
+
+    //   const submitBtn = document.querySelector(`#submit-modal`);
+
+    //   submitBtn.addEventListener("click", function () {
+    //     deletingRequest(deleteParent);
+    //   });
+
+    //   console.log(deleteParent);
+    // });
   }
   createDataTable();
+  columnDefs.pop(-1);
   // parametersToJSON(columnDefs);
 });

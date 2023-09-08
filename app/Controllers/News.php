@@ -133,6 +133,17 @@ class News extends BaseController
         $model->delete($data['id']);
     }
 
+    public function deleteMultipleNews()
+    {
+        $data = $_POST['rowdata'];
+
+        $model = model(NewsModel::class);
+
+        $model->whereIn('id', $data['id']);
+
+        $model->delete();
+    }
+
     public function getMetaColumns($metaTableName){
 
         $model = model(ColumnsModel::class);

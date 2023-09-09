@@ -47,6 +47,12 @@ $(document).ready(function () {
       arr.push(target[i].textContent);
     }
 
+    categoryParsed.forEach((e) => {
+      if (arr.includes(e.news_category)) {
+        arr[arr.indexOf(e.news_category)] = e.id;
+      }
+    });
+
     $("#myModal").modal("show");
     parametersToJSON(columnDefs, arr);
   }

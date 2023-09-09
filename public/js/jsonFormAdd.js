@@ -99,7 +99,26 @@ const parametersToJSON = function (
         key: e.title,
         titleMap: titleObj,
         onInsert: function (evt) {
-          document.getElementsByName("category")[0].value = "";
+          const subDropdown = document.getElementsByName("subcategory")[0];
+          const value = document.getElementsByName("category")[0].value;
+          let = categoryArr = [];
+
+          categoryParsed.forEach((e) => {
+            if (e.parent_id == value) {
+              let newOption = new Option(e.news_category, e.id);
+              subDropdown.add(newOption, undefined);
+            }
+          });
+
+          categoryParsed.forEach((e) => {
+            if (e.parent_id == null) {
+              categoryArr.push(e);
+            }
+          });
+
+          if (valuePassed !== null) {
+            subDropdown.value = valuePassed.find((e) => e > categoryArr.length);
+          }
         },
         onChange: function (evt) {
           const subDropdown = document.getElementsByName("subcategory")[0];

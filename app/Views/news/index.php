@@ -39,7 +39,7 @@
           <h4 class="modal-title">JSON Form</h4>
         </div>
         <div class="modal-body">
-        <form></form>
+        <form enctype='multipart/form-data' name="files[]"></form>
         </div>
         <div class="modal-footer">
         </div>

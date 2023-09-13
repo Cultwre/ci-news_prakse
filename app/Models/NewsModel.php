@@ -8,7 +8,7 @@ class NewsModel extends Model
 {
     protected $table = 'news';
 
-    protected $allowedFields = ['title', 'slug', 'body', 'category_id', 'subcategory_id'];
+    protected $allowedFields = ['title', 'slug', 'body', 'category_id', 'subcategory_id', 'json_data'];
 
     public function getNews($slug = false)
     {

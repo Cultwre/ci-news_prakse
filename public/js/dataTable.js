@@ -53,6 +53,14 @@ $(document).ready(function () {
       }
     });
 
+    newsData.forEach((e) => {
+      if (e["id"] == arr[0]) {
+        arr.push(e["json_data"]);
+      }
+    });
+
+    console.log(arr);
+
     $("#myModal").modal("show");
     parametersToJSON(columnDefs, arr);
   }
@@ -65,6 +73,12 @@ $(document).ready(function () {
     for (let i = 0; target.length > i; i++) {
       arr.push(target[i].textContent);
     }
+
+    newsData.forEach((e) => {
+      if (e["id"] == arr[0]) {
+        arr.push(e["json_data"]);
+      }
+    });
 
     $("#myModal").modal("show");
     parametersToJSON(columnParameters, arr, (view = true));
@@ -114,12 +128,14 @@ $(document).ready(function () {
   //     required: true,
   //   },
   // ];
+  let columnTable = [...columnDefs];
+  columnTable.splice(-2, 1);
 
   async function createDataTable() {
     $("#example").DataTable({
       sPaginationType: "full_numbers",
       data: newsData,
-      columns: columnDefs,
+      columns: columnTable,
       dom: "Bfrtip", // Needs button container
       // select: "single",
       responsive: true,
@@ -220,24 +236,34 @@ $(document).ready(function () {
     $("#addbutton").on("click", function () {
       document.querySelector("form").innerHTML = "";
       $("#myModal").modal("show");
+      console.log(columnDefs);
       parametersToJSON(columnDefs);
     });
 
     $("#delete-button").on("click", function () {
       const checkboxes = document.querySelectorAll("#checkboxDelete");
       let checked = [];
+      let array = [];
 
       checkboxes.forEach((e) => {
         if (e.checked) {
           let id = e.parentElement.parentElement.children[0].textContent;
           checked.push(id);
         }
+      });
 
-        const submitBtn = document.querySelector(`#submit-modal`);
+      newsData.forEach((e) => {
+        if (checked.some((r) => e["id"].includes(r))) {
+          array.push(e["json_data"]);
+        }
+      });
 
-        submitBtn.addEventListener("click", function () {
-          deletingRequest(checked, (arr = true));
-        });
+      console.log(array);
+
+      const submitBtn = document.querySelector(`#submit-modal`);
+
+      submitBtn.addEventListener("click", function () {
+        deletingRequest(checked, array, (arr = true));
       });
     });
 
@@ -276,10 +302,18 @@ $(document).ready(function () {
           "td"
         )[0].textContent;
 
+      let arr = [];
+
       const submitBtn = document.querySelector(`#submit-modal`);
 
+      newsData.forEach((e) => {
+        if (e["id"] == deleteParent) {
+          arr.push(e["json_data"]);
+        }
+      });
+
       submitBtn.addEventListener("click", function () {
-        deletingRequest(deleteParent);
+        deletingRequest(deleteParent, arr);
       });
     });
 

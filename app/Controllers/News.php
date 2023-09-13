@@ -76,6 +76,7 @@ class News extends BaseController
             'body'  => $post['body'],
             'category_id'  => $post['category_id'],
             'subcategory_id' => $data['subcategory_id'],
+            'json_data' => $data['json_data'],
         ]);
 
         return view('templates/header', ['title' => 'Create a news item'])
@@ -96,40 +97,140 @@ class News extends BaseController
     }
     
     public function createNews()
-    {
-        $data = $_POST['rowdata'];
+    {   
 
+        $fileData = [];
+
+        if($files = $this->request->getFiles('files')){
+        foreach ($files["files"] as $file) {
+            
+            if($file->isValid() && !$file->hasMoved()) {
+                $newName = $file->getRandomName();
+                $file->move(FCPATH.'uploads',$newName);
+
+                $filePath = base_url('uploads/' . $newName);
+
+                $fileInfo = [
+                    'file_clientName' => $file->getClientName(),
+                    'file_name' => $newName,
+                    'file_url' => $filePath, 
+                ];
+
+                $fileData[] = $fileInfo;
+
+            } else {
+                log_message('error', $file->getErrorString());
+            }
+        }
+    }
+
+        $jsonData = $_POST['rowdata'];
         $model = model(NewsModel::class);
 
+        $data = json_decode($jsonData);
+        $data->json_data = $fileData;
+
         $model->save([
-            'title' => $data['title'],
-            'slug'  => url_title($data['title'], '-', true),
-            'body'  => $data['body'],
-            'category_id' => $data['category_id'],
-            'subcategory_id' => $data['subcategory_id'],
+            // 'title' => $data['title'],
+            // 'slug'  => url_title($data['title'], '-', true),
+            // 'body'  => $data['body'],
+            // 'category_id' => $data['category_id'],
+            // 'subcategory_id' => $data['subcategory_id'],
+            // 'json_data' => $data['json_data'],
+            'title' => $data->title,
+            'slug'  => url_title($data->title, '-', true),
+            'body'  => $data->body,
+            'category_id'  => $data->category_id,
+            'subcategory_id' => $data->subcategory_id,
+            'json_data' => json_encode($data->json_data),
         ]);
     }
 
     public function editNews()
     {
-        $data = $_POST['rowdata'];
 
+        $fileData = [];
+
+        if($files = $this->request->getFiles('files')){
+        foreach ($files["files"] as $file) {
+            
+            if($file->isValid() && !$file->hasMoved()) {
+                $newName = $file->getRandomName();
+                $file->move(FCPATH.'uploads',$newName);
+
+                $filePath = base_url('uploads/' . $newName);
+
+                $fileInfo = [
+                    'file_clientName' => $file->getClientName(),
+                    'file_name' => $newName,
+                    'file_url' => $filePath, 
+                ];
+
+                $fileData[] = $fileInfo;
+
+            } else {
+                log_message('error', $file->getErrorString());
+            }
+        }
+    }
+
+        $jsonData = $_POST['rowdata'];
         $model = model(NewsModel::class);
 
-        $updatedData = [
-            'title' => $data['title'],
-            'slug'  => url_title($data['title'], '-', true),
-            'body'  => $data['body'],
-            'category_id'  => $data['category_id'],
-            'subcategory_id' => $data['subcategory_id'],
-        ];
+        $data = json_decode($jsonData);
+        $data->json_data = $fileData;
 
-        $model->update($data['id'], $updatedData);
+        $folderPath = FCPATH.'uploads/';
+        
+        if(property_exists($data, 'old_files')) {
+        foreach($data->old_files as $file) {
+            if (file_exists($folderPath . $file->file_name)) {
+                unlink($folderPath . $file->file_name);
+            }
+        };
+    };
+    if(property_exists($data, 'saved_files')) {
+        foreach ($data->json_data as $array) {
+            $newObject = (object)$array;
+            
+            $data->saved_files[] = $newObject;
+        }
+        
+        $updatedData = [
+            'title' => $data->title,
+            'slug'  => url_title($data->title, '-', true),
+            'body'  => $data->body,
+            'category_id'  => $data->category_id,
+            'subcategory_id' => $data->subcategory_id,
+            'json_data' => json_encode($data->saved_files),
+        ];
+    } else {
+        $updatedData = [
+            'title' => $data->title,
+            'slug'  => url_title($data->title, '-', true),
+            'body'  => $data->body,
+            'category_id'  => $data->category_id,
+            'subcategory_id' => $data->subcategory_id,
+            'json_data' => json_encode($data->json_data),
+        ];
+    }  
+
+        $model->update($data->id, $updatedData);
     }
 
     public function deleteNews()
     {
         $data = $_POST['rowdata'];
+
+        $folderPath = FCPATH.'uploads/';
+
+        if(isset($data['file_names'])) {
+            foreach($data['file_names'] as $file) {
+                if (file_exists($folderPath . $file)) {
+                    unlink($folderPath . $file);
+                }
+            };
+        };
 
         $model = model(NewsModel::class);
 
@@ -139,6 +240,16 @@ class News extends BaseController
     public function deleteMultipleNews()
     {
         $data = $_POST['rowdata'];
+
+        $folderPath = FCPATH.'uploads/';
+        
+        if(isset($data['file_names'])) {
+            foreach($data['file_names'] as $file) {
+                if (file_exists($folderPath . $file)) {
+                    unlink($folderPath . $file);
+                }
+            };
+        };
 
         $model = model(NewsModel::class);
 
@@ -170,5 +281,11 @@ class News extends BaseController
         $data = $model->getCategory();
 
         return json_encode($data);
+    }
+
+    public function getFiles() {
+        $folderPath = FCPATH.'uploads';
+
+        return var_dump($folderPath);
     }
 }

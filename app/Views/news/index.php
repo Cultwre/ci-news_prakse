@@ -1,6 +1,6 @@
-<head>
+<!-- <head>
     <meta name="csrf-token" content="<?= csrf_hash() ?>">
-</head>
+</head> -->
 <!-- <h2><?= esc($title) ?></h2> -->
 
 <?php if (! empty($news) && is_array($news)): ?>

@@ -331,7 +331,7 @@ const parametersToJSON = function (
     });
   }
 
-  console.log(layout);
+  console.log(JSON.stringify(layout));
 
   $(`form`).jsonForm(layout);
 

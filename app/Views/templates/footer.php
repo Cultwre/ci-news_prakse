@@ -12,6 +12,8 @@
 <script src="<?= base_url('lib/dataTables.altEditor.free.js') ?>" ></script>
 <script src="<?= base_url('/js/dataTable.js') ?>" ></script>
 <script src="<?= base_url('/js/jsonFormAdd.js') ?>" ></script>
+<script src="<?= base_url('/js/formbuilder.js') ?>" ></script>
+<script src="<?= base_url('/js/metaJson.js') ?>" ></script>
 
 </body>
 </html>

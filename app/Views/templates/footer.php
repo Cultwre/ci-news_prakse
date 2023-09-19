@@ -12,8 +12,9 @@
 <script src="<?= base_url('lib/dataTables.altEditor.free.js') ?>" ></script>
 <script src="<?= base_url('/js/dataTable.js') ?>" ></script>
 <script src="<?= base_url('/js/jsonFormAdd.js') ?>" ></script>
-<script src="<?= base_url('/js/formbuilder.js') ?>" ></script>
-<script src="<?= base_url('/js/metaJson.js') ?>" ></script>
-
+<script src="<?= base_url('/metaJS/formbuilder.js') ?>" ></script>
+<script src="<?= base_url('/metaJS/metaJson.js') ?>" ></script>
+<script src="<?= base_url('/attributesJS/attributesTable.js') ?>" ></script>
+<script src="<?= base_url('/attributesJS/attributesJson.js') ?>" ></script>
 </body>
 </html>

@@ -139,7 +139,7 @@ const metaJSON = function (valuePassed = null, view = false, clone = false) {
         type: "POST",
         data: ajaxData,
         success: function (res) {
-          location.reload();
+          // location.reload();
         },
         error: error,
       });

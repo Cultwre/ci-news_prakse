@@ -112,6 +112,7 @@ $(document).ready(function () {
 
   $("#addbutton").on("click", function () {
     document.querySelector("form").innerHTML = "";
+    document.querySelector("form").innerHTML = "";
     $("#myModal").modal("show");
     metaJSON();
   });

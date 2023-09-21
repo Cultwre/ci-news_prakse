@@ -36,6 +36,8 @@ class Attributes extends BaseController
         $model->save([
             'table_name' => $data['table_name'],
             'column_name'  => $data['column_name'],
+            'show_in_list'  => $data['show_in_list'],
+            'form_part'  => $data['form_part'],
             'attributes_json'  => $data['attributes_json'],
             'schema_id'  => $data['schema_id'],
         ]);
@@ -50,6 +52,8 @@ class Attributes extends BaseController
         $updatedData = [
             'table_name' => $data['table_name'],
             'column_name'  => $data['column_name'],
+            'show_in_list'  => $data['show_in_list'],
+            'form_part'  => $data['form_part'],
             'attributes_json'  => $data['attributes_json'],
             'schema_id'  => $data['schema_id'],
         ];
@@ -75,6 +79,8 @@ class Attributes extends BaseController
         $model->save([
             'table_name' => $data['table_name'],
             'column_name'  => $data['column_name'],
+            'show_in_list'  => $data['show_in_list'],
+            'form_part'  => $data['form_part'],
             'attributes_json'  => $data['attributes_json'],
             'schema_id'  => $data['schema_id'],
         ]);

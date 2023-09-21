@@ -16,5 +16,7 @@
 <script src="<?= base_url('/metaJS/metaJson.js') ?>" ></script>
 <script src="<?= base_url('/attributesJS/attributesTable.js') ?>" ></script>
 <script src="<?= base_url('/attributesJS/attributesJson.js') ?>" ></script>
+<script src="<?= base_url('/newsJS/newsJson.js') ?>" ></script>
+<script src="<?= base_url('/newsJS/newsTable.js') ?>" ></script>
 </body>
 </html>

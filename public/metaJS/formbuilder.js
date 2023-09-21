@@ -29,13 +29,14 @@
 // };
 // $("#meta-form").jsonForm(layout);
 $(document).ready(function () {
-  metaData = JSON.parse(
-    metaData.replaceAll(`"[{"`, `[{"`).replaceAll(`"}]"`, `"}]`)
-  );
+  console.log(metaData);
+
+  // metaData = JSON.parse(
+  //   metaData.replaceAll(`"[{"`, `[{"`).replaceAll(`"}]"`, `"}]`)
+  // );
 
   function editRow(target, view = false, clone = false) {
     document.querySelector("form").innerHTML = "";
-
     let arr = [];
 
     for (let i = 0; target.length > i; i++) {

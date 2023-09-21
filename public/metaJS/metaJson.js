@@ -139,7 +139,7 @@ const metaJSON = function (valuePassed = null, view = false, clone = false) {
         type: "POST",
         data: ajaxData,
         success: function (res) {
-          // location.reload();
+          location.reload();
         },
         error: error,
       });
@@ -147,7 +147,7 @@ const metaJSON = function (valuePassed = null, view = false, clone = false) {
   };
 
   if (valuePassed !== null) {
-    let jsonData = valuePassed[valuePassed.length - 1];
+    let jsonData = JSON.parse(valuePassed[valuePassed.length - 1]);
 
     jsonData.forEach((e, i) => {
       let valueName = `${i}value`;

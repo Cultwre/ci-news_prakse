@@ -23,6 +23,16 @@ const attributesJSON = function (
         title: "Column's name",
         type: "string",
       },
+      show_in_list: {
+        title: "Show in table?",
+        type: "integer",
+        enum: [0, 1],
+      },
+      form_part: {
+        title: "Form part",
+        type: "string",
+        enum: ["Schema", "Form", "Reference"],
+      },
       schema_id: {
         title: "Schema",
         type: "string",
@@ -40,6 +50,14 @@ const attributesJSON = function (
       },
       {
         key: "column_name",
+        readonly: view !== true ? false : true,
+      },
+      {
+        key: "show_in_list",
+        readonly: view !== true ? false : true,
+      },
+      {
+        key: "form_part",
         readonly: view !== true ? false : true,
       },
       {
@@ -71,7 +89,9 @@ const attributesJSON = function (
     layout.value["id"] = valuePassed[0];
     layout.value["table_name"] = valuePassed[1];
     layout.value["column_name"] = valuePassed[2];
-    layout.value["schema_id"] = valuePassed[3];
+    layout.value["show_in_list"] = valuePassed[3];
+    layout.value["form_part"] = valuePassed[4];
+    layout.value["schema_id"] = valuePassed[5];
   }
 
   $("#attributes-form").jsonForm(layout);
@@ -124,21 +144,15 @@ const attributesJSON = function (
 
         if (valuePassed !== null) {
           let passedDropdownValue = valuePassed[valuePassed.length - 1];
-          console.log(passedDropdownValue);
+          console.log(passedDropdownValue[0]);
 
-          passedDropdownValue.forEach((o) => {
-            for (var key in o) {
-              if (o.hasOwnProperty(e["meta-attribute"])) {
-                var value = o[key];
-                // console.log("Property:", i, "Value:", value);
-                if (value == "false") {
-                  secondForm.value[i] = false;
-                } else {
-                  secondForm.value[i] = value;
-                }
-              }
-            }
-          });
+          console.log(e["meta-attribute"]);
+
+          if (passedDropdownValue[0][e["meta-attribute"]] == "false") {
+            secondForm.value[i] = false;
+          } else {
+            secondForm.value[i] = passedDropdownValue[0][e["meta-attribute"]];
+          }
         }
       });
 
@@ -173,16 +187,21 @@ const attributesJSON = function (
           .querySelector("#schema-form")
           .querySelectorAll("label")
           .forEach((e) => {
-            arrayForLabels.push(e.textContent);
+            console.log(e.textContent);
+            if (e.textContent !== "") {
+              arrayForLabels.push(e.textContent);
+            }
           });
 
         console.log(arrayForLabels);
 
+        let obj = {};
+
         arrayForLabels.forEach((event, i) => {
-          let obj = {};
           obj[event] = String(values[i]);
-          arrayForAjax.push(obj);
         });
+
+        arrayForAjax.push(obj);
 
         console.log(arrayForAjax);
         console.log(arrayForSubmit);
@@ -193,7 +212,9 @@ const attributesJSON = function (
             rowdata: {
               table_name: arrayForSubmit[1],
               column_name: arrayForSubmit[2],
-              schema_id: arrayForSubmit[3],
+              show_in_list: +arrayForSubmit[3],
+              form_part: arrayForSubmit[4],
+              schema_id: arrayForSubmit[5],
               attributes_json: JSON.stringify(arrayForAjax),
             },
           };
@@ -204,7 +225,9 @@ const attributesJSON = function (
               id: arrayForSubmit[0],
               table_name: arrayForSubmit[1],
               column_name: arrayForSubmit[2],
-              schema_id: arrayForSubmit[3],
+              show_in_list: +arrayForSubmit[3],
+              form_part: arrayForSubmit[4],
+              schema_id: arrayForSubmit[5],
               attributes_json: JSON.stringify(arrayForAjax),
             },
           };
@@ -243,11 +266,15 @@ const attributesJSON = function (
   };
 
   const dropdown = document.getElementsByName("schema_id")[0];
+  const showInList = document.getElementsByName("show_in_list")[0];
+  const formPart = document.getElementsByName("form_part")[0];
 
   dropdown.onload = showDropdownContent(dropdown.value);
 
   if (view === true) {
     dropdown.setAttribute("readonly", "true");
+    showInList.setAttribute("readonly", "true");
+    formPart.setAttribute("readonly", "true");
   }
 };
 

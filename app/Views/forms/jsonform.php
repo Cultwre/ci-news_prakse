@@ -1,6 +1,6 @@
-<?php
-  echo "<script>let metaData = '$metaData';</script>";
-?>
+<script>
+        var metaData = <?php echo $metaData; ?>;
+</script>
 
 <div class="container">
 <button class="btn btn-primary" id="addbutton" title="Add"><span class="fa fa-plus-square"></span></button>

@@ -47,6 +47,14 @@ $(document).ready(function () {
       title: "Column's name",
     },
     {
+      data: "show_in_list",
+      title: "Show in table?",
+    },
+    {
+      data: "form_part",
+      title: "Form part",
+    },
+    {
       data: "schema_id",
       title: "Schema",
     },

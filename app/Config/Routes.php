@@ -11,11 +11,16 @@ use App\Controllers\News;
 use App\Controllers\Pages;
 use App\Controllers\Form;
 use App\Controllers\Attributes;
+use App\Controllers\NewsNew;
 
+$routes->get('table/(:segment)', [NewsNew::class, 'index']);
 $routes->get('form', [Form::class, 'index']);
 $routes->get('attributes', [Attributes::class, 'index']);
 $routes->get('news', [News::class, 'index']);
+
 $routes->get('news/getData', [News::class, 'getData']);
+$routes->get('table/getDropdown', [NewsNew::class, 'getDropdown']);
+$routes->get('table/getSubDropdown', [NewsNew::class, 'getSubDropdown']);
 $routes->get('form/getMetaStructure', [Form::class, 'getMetaStructure']);
 $routes->get('news/getCategories', [News::class, 'getCategories']);
 $routes->get('news/getFiles', [News::class, 'getFiles']);

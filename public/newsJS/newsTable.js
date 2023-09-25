@@ -1,23 +1,31 @@
 $(document).ready(function () {
+  let dataForEdit = dbData;
+  let state = [];
+
   dbData = JSON.parse(
     dbData.replaceAll(`"[{"`, `[{"`).replaceAll(`"}]"`, `"}]`)
   );
+
+  dataForEdit = JSON.parse(
+    dataForEdit.replaceAll(`"[{"`, `[{"`).replaceAll(`"}]"`, `"}]`)
+  );
+
   dropdownValues = JSON.parse(dropdownValues);
   subDropdownValues = JSON.parse(subDropdownValues);
 
-  function getCategoryValue(dropdownValues) {
-    if (dropdownValues !== null) {
+  function getCategoryValue(dropdownData) {
+    if (dropdownData !== null) {
       let keyOfCategories;
       let valueOfCategories;
 
-      for (const key in dropdownValues) {
-        if (Array.isArray(dropdownValues[key])) {
+      for (const key in dropdownData) {
+        if (Array.isArray(dropdownData[key])) {
           keyOfCategories = key;
           break;
         }
       }
 
-      let dropdownsArr = dropdownValues[keyOfCategories];
+      let dropdownsArr = dropdownData[keyOfCategories];
 
       for (const key in dropdownsArr[0]) {
         if (dropdownsArr[0].hasOwnProperty(key)) {
@@ -35,6 +43,8 @@ $(document).ready(function () {
         }
       });
     }
+
+    console.log(dbData);
   }
 
   if (Array.isArray(dropdownValues)) {
@@ -51,6 +61,38 @@ $(document).ready(function () {
     });
   } else {
     getCategoryValue(subDropdownValues);
+  }
+
+  function editRow(target) {
+    document.querySelector("form").innerHTML = "";
+
+    let arr = [];
+
+    for (let i = 0; target.length > i; i++) {
+      arr.push(target[i].textContent);
+    }
+
+    let selectedData = dataForEdit.filter((e) => e.id === arr[0]);
+
+    $("#myModal").modal("show");
+    newsJSON(selectedData);
+  }
+
+  function viewRow(target) {
+    document.querySelector("form").innerHTML = "";
+
+    let arr = [];
+
+    for (let i = 0; target.length > i; i++) {
+      arr.push(target[i].textContent);
+    }
+
+    let selectedData = dataForEdit.filter((e) => e.id === arr[0]);
+
+    console.log(selectedData);
+
+    $("#myModal").modal("show");
+    newsJSON(selectedData, (view = true));
   }
 
   var columnDefs = [];
@@ -102,5 +144,75 @@ $(document).ready(function () {
     document.querySelector("form").innerHTML = "";
     $("#myModal").modal("show");
     newsJSON();
+  });
+
+  $(document).on("click", "[id^='news-table'] #edit-row", "tr", function (x) {
+    const editParent =
+      x.currentTarget.parentElement.parentElement.getElementsByTagName("td");
+
+    editRow(editParent);
+  });
+
+  $(document).on("click", "[id^='news-table'] #view-row", "tr", function (x) {
+    const viewParent =
+      x.currentTarget.parentElement.parentElement.getElementsByTagName("td");
+
+    viewRow(viewParent);
+  });
+
+  $(document).on("click", "[id^='news-table'] #delete-row", "tr", function (x) {
+    const deleteParent =
+      x.currentTarget.parentElement.parentElement.getElementsByTagName("td")[0]
+        .textContent;
+
+    const submitBtn = document.querySelector(`#submit-modal`);
+    console.log(deleteParent);
+
+    submitBtn.addEventListener("click", function () {
+      deletingRecord(deleteParent);
+    });
+  });
+
+  $(document).on(
+    "click",
+    "[id^='news-table'] #checkboxDelete",
+    "tr",
+    function (x) {
+      const checkbox = x.currentTarget;
+      const checkboxes = document.querySelectorAll("#checkboxDelete");
+
+      if (checkbox.checked) {
+        state.push(".");
+      } else {
+        state.splice(-1);
+      }
+
+      if (state.length >= 2) {
+        document.getElementById("delete-button").disabled = false;
+      } else {
+        document.getElementById("delete-button").disabled = true;
+      }
+    }
+  );
+
+  $("#delete-button").on("click", function () {
+    const checkboxes = document.querySelectorAll("#checkboxDelete");
+    let checked = [];
+    let array = [];
+
+    checkboxes.forEach((e) => {
+      if (e.checked) {
+        let id = e.parentElement.parentElement.children[0].textContent;
+        checked.push(id);
+      }
+    });
+
+    console.log(checked);
+
+    const submitBtn = document.querySelector(`#submit-modal`);
+
+    submitBtn.addEventListener("click", function () {
+      deletingRecord(checked, (multiple = true));
+    });
   });
 });
